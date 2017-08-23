@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/mvc
+         http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+
+    <mvc:default-servlet-handler/>
+    <mvc:annotation-driven/>
+    <!-- Specifying base package of the Components like Controller, Service,DAO -->
+    <context:component-scan base-package="dao"></context:component-scan>
+    <context:component-scan base-package="controller"></context:component-scan>
+    <context:component-scan base-package="servise"></context:component-scan>
+
+    <context:property-placeholder location="classpath:application.properties"/>
+    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="${jdbc.driverClassName}"/>
+        <property name="url" value="${jdbc.database}"/>
+        <property name="username" value="${jdbc.username}"/>
+        <property name="password" value="${jdbc.password}"/>
+
+    </bean>
+
+
+
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate5.LocalSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="packagesToScan" value="dao.entity"/>
+        <property name="configLocation" value="classpath:hibernate.cfg.xml"/>
+        <property name="hibernateProperties">
+            <props>
+                <prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+                <prop key="hibernate.hbm2ddl.auto">update</prop>
+                <prop key="hibernate.format_sql">false</prop>
+                <prop key="hibernate.show_sql">false</prop>
+                <prop key="hibernate.connection.url">jdbc:mysql://localhost:3306/schedule</prop>
+                <prop key="hibernate.connection.driver_class">com.mysql.jdbc.Driver</prop>
+            </props>
+        </property>
+        <property name="mappingLocations">
+            <list>
+                <value>classpath:dao/entity/CallsEntity.hbm.xml</value>
+                <value>classpath:dao/entity/DaysweekEntity.hbm.xml</value>
+                <value>classpath:dao/entity/GroupsEntity.hbm.xml</value>
+                <value>classpath:dao/entity/LecturehallEntity.hbm.xml</value>
+                <value>classpath:dao/entity/SheduleEntity.hbm.xml</value>
+                <value>classpath:dao/entity/SubjectEntity.hbm.xml</value>
+                <value>classpath:dao/entity/TeacherEntity.hbm.xml</value>
+                <value>classpath:dao/entity/UserEntity.hbm.xml</value>
+            </list>
+        </property>
+
+    </bean>
+
+    <tx:annotation-driven transaction-manager="transactionManager"/>
+
+
+    <bean id="transactionManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+
+    <bean id="callsDao" class="dao.daoImpl.CallsDaoImpl">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <bean id="daysWeekDao" class="dao.daoImpl.DaysWeekDaoImpl">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <bean id="groupsDao" class="dao.daoImpl.GroupsDaoImpl">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <bean id="lecturehallDao" class="dao.daoImpl.LecturehallImpl">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <bean id="scheduleDao" class="dao.daoImpl.ScheduleImpl">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <bean id="subjectDao" class="dao.daoImpl.SubjectImpl">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+    <bean id="teacherDao" class="dao.daoImpl.TeacherImpl">
+        <property name="sessionFactory" ref="sessionFactory"/>
+
+    </bean>
+
+    <bean id="userDao" class="dao.daoImpl.UserImpl">
+        <property name="sessionFactory" ref="sessionFactory"/>
+    </bean>
+
+
+    <bean id="service" class="servise.ServiseImpl">
+        <property name="callsDao" ref="callsDao"/>
+        <property name="daysWeekDao" ref="daysWeekDao"/>
+        <property name="groupsDao" ref="groupsDao"/>
+        <property name="lecturehallDao" ref="lecturehallDao"/>
+        <property name="scheduleDao" ref="scheduleDao"/>
+        <property name="subjectDao" ref="subjectDao"/>
+        <property name="teacherDao" ref="teacherDao"/>
+        <property name="userDao" ref="userDao"/>
+
+    </bean>
+
+    <!-- View Resolver -->
+    <bean
+            class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+        <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"/>
+        <property name="prefix" value="/WEB-INF/pages/"/>
+        <property name="suffix" value=".jsp" />
+    </bean>
+
+</beans>
+

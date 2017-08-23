@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE hibernate-configuration PUBLIC
+    "-//Hibernate/Hibernate Configuration DTD//EN"
+    "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+  <session-factory>
+    <property name="connection.url">jdbc:mysql://localhost:3306/schedule</property>
+    <property name="connection.driver_class">com.mysql.jdbc.Driver</property>
+    <mapping resource="dao/entity/CallsEntity.hbm.xml"/>
+    <mapping class="dao.entity.CallsEntity"/>
+    <mapping resource="dao/entity/DaysweekEntity.hbm.xml"/>
+    <mapping class="dao.entity.DaysweekEntity"/>
+    <mapping resource="dao/entity/GroupsEntity.hbm.xml"/>
+    <mapping class="dao.entity.GroupsEntity"/>
+    <mapping resource="dao/entity/LecturehallEntity.hbm.xml"/>
+    <mapping class="dao.entity.LecturehallEntity"/>
+    <mapping resource="dao/entity/SheduleEntity.hbm.xml"/>
+    <mapping class="dao.entity.SheduleEntity"/>
+    <mapping resource="dao/entity/SubjectEntity.hbm.xml"/>
+    <mapping class="dao.entity.SubjectEntity"/>
+    <mapping resource="dao/entity/TeacherEntity.hbm.xml"/>
+    <mapping class="dao.entity.TeacherEntity"/>
+    <mapping resource="dao/entity/UserEntity.hbm.xml"/>
+    <mapping class="dao.entity.UserEntity"/>
+    <!-- <property name="connection.username"/> -->
+    <!-- <property name="connection.password"/> -->
+
+    <!-- DB schema will be updated if needed -->
+    <!-- <property name="hbm2ddl.auto">update</property> -->
+  </session-factory>
+</hibernate-configuration>
