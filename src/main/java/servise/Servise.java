@@ -70,4 +70,6 @@ public interface Servise {
     public List<UserEntity> getListUser();
 
     public UserEntity authorization(UserEntity userEntity);
+
+    public void updateUser(UserEntity userEntity);
 }

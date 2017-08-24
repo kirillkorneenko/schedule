@@ -8,31 +8,28 @@
         <id name="id">
             <column name="id" sql-type="int(11)"/>
         </id>
-        <property name="valide">
-            <column name="valide" sql-type="varchar(50)" length="50"/>
-        </property>
         <property name="weekNumber">
-            <column name="weekNumber" sql-type="varchar(50)" length="50" not-null="true"/>
+            <column name="weekNumber" sql-type="varchar(50)" length="50"/>
         </property>
-        <many-to-one name="daysweekByCodDayWeek" class="dao.entity.DaysweekEntity">
+        <many-to-one name="daysweekByCodDayWeek" class="dao.entity.DaysweekEntity" lazy="false">
             <column name="codDayWeek"/>
         </many-to-one>
-        <many-to-one name="callsByLessonNumber" class="dao.entity.CallsEntity">
+        <many-to-one name="callsByLessonNumber" class="dao.entity.CallsEntity" lazy="false">
             <column name="lessonNumber"/>
         </many-to-one>
-        <many-to-one name="lecturehallByCodeAudience" class="dao.entity.LecturehallEntity">
+        <many-to-one name="lecturehallByCodeAudience" class="dao.entity.LecturehallEntity"  lazy="false">
             <column name="codeAudience"/>
         </many-to-one>
-        <many-to-one name="groupsByCodeGroup" class="dao.entity.GroupsEntity">
+        <many-to-one name="groupsByCodeGroup" class="dao.entity.GroupsEntity" lazy="false">
             <column name="codeGroup"/>
         </many-to-one>
-        <many-to-one name="userByCodeUserId" class="dao.entity.UserEntity">
+        <many-to-one name="userByCodeUserId" class="dao.entity.UserEntity" lazy="false">
             <column name="userId"/>
         </many-to-one>
-        <many-to-one name="subjectByCodeDiscipline" class="dao.entity.SubjectEntity">
+        <many-to-one name="subjectByCodeDiscipline" class="dao.entity.SubjectEntity" lazy="false">
             <column name="codeDiscipline"/>
         </many-to-one>
-        <many-to-one name="teacherByCodeTeacher" class="dao.entity.TeacherEntity">
+        <many-to-one name="teacherByCodeTeacher" class="dao.entity.TeacherEntity" lazy="false">
             <column name="codeTeacher"/>
         </many-to-one>
     </class>

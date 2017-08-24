@@ -12,6 +12,10 @@ public class DaysweekEntity {
         super();
     }
 
+    public DaysweekEntity(int id) {
+        this.id = id;
+    }
+
     public DaysweekEntity(int id, String dayWeek) {
         this.id = id;
         this.dayWeek = dayWeek;

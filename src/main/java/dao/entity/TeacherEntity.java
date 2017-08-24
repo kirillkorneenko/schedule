@@ -14,6 +14,10 @@ public class TeacherEntity {
         super();
     }
 
+    public TeacherEntity(int id) {
+        this.id = id;
+    }
+
     public TeacherEntity(int id, String surname, String name, String patronymic) {
         this.id = id;
         this.surname = surname;

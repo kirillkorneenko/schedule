@@ -245,4 +245,10 @@ public class ServiseImpl implements Servise {
     public UserEntity authorization(UserEntity userEntity) {
         return this.userDao.authorization(userEntity);
     }
+
+    @Override
+    @Transactional
+    public void updateUser(UserEntity userEntity) {
+        this.userDao.updateUser(userEntity);
+    }
 }

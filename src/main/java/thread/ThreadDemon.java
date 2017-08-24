@@ -5,9 +5,7 @@ import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import dao.entity.GroupsEntity;
-import dao.entity.SheduleEntity;
-import dao.entity.UserEntity;
+import dao.entity.*;
 import servise.Servise;
 
 import java.io.BufferedReader;
@@ -56,19 +54,38 @@ while (true) {
             JsonParser jp = f.createParser(sb.toString());
             ObjectMapper mapper = new ObjectMapper(); // can reuse, share globally
             Example example = mapper.readValue(jp, Example.class);
-            System.out.println(example.toString());
 
             List<SheduleEntity> sheduleEntities= servise.getListShedule();
-            for(SheduleEntity sheduleEntity: sheduleEntities){
-                if(sheduleEntity.getUserByCodeUserId().getId() == userEntity.getId()){
-                    for(int i=0;i<example.getSchedules().size();i++){
-                        for(int j =0; j<example.getSchedules().get(i).getSchedule().size();j++){
 
+                    List<Schedule> schedules =example.getSchedules();
+                    for(int i=0;i<schedules.size();i++){
+                      Schedule schedule= schedules.get(i);
+                      List<Schedule_> schedule_s = schedule.getSchedule();
+                      String dayweek= schedule.getWeekDay();
+
+                        for(int j =0; j<schedule_s.size();j++){
+                            Schedule_ schedule_ = schedule_s.get(j);
+                            String timeStart = schedule_.getStartLessonTime();
+                            String subjectName = schedule_.getSubject();
+                            boolean flag = false;
+                            for(SheduleEntity sheduleEntity: sheduleEntities){
+                                if(sheduleEntity.getUserByCodeUserId().getId() == userEntity.getId()){
+                                    if(sheduleEntity.getDaysweekByCodDayWeek().getDayWeek().equals(dayweek)){
+                                    CallsEntity callsEntity = sheduleEntity.getCallsByLessonNumber();
+                                    SubjectEntity subjectEntity = sheduleEntity.getSubjectByCodeDiscipline();
+                                    if(timeStart.equals(callsEntity.getStart())&&subjectName.equals(subjectEntity.getNameSubject())){
+                                        flag= true;
+                                    }
+                                    }
+                                }
+                            }
+                            if(flag == false) {
+                                userEntity.setValid("false");
+                                servise.updateUser(userEntity);
+                            }
                         }
                     }
 
-                }
-            }
 
         } else {
             System.out.println("fail" + connection.getResponseCode());

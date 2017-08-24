@@ -58,4 +58,10 @@ public class UserImpl implements UserDao {
         }
         return null;
     }
+
+    @Override
+    public void updateUser(UserEntity userEntity) {
+        Session session= this.sessionFactory.getCurrentSession();
+        session.update(userEntity);
+    }
 }

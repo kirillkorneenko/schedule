@@ -26,5 +26,8 @@
         <property name="status">
             <column name="status" sql-type="varchar(50)" length="50"/>
         </property>
+        <property name="valid">
+            <column name="valid" sql-type="varchar(50)" length="50"/>
+        </property>
     </class>
 </hibernate-mapping>

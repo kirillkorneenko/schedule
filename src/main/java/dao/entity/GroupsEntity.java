@@ -16,6 +16,10 @@ public class GroupsEntity {
         super();
     }
 
+    public GroupsEntity(int id) {
+        this.id = id;
+    }
+
     public GroupsEntity(int id, Integer course, String name, Integer facultyId, Integer specialityDepartmentEducationFormId, String calendarId) {
         this.id = id;
         this.course = course;

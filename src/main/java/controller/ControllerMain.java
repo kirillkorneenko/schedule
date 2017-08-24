@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -63,26 +64,35 @@ public class ControllerMain {
 
             if (userEntity1 == null) {
                 modelAndView.setViewName("index");
-                modelAndView.addObject("userEntity1", null);
                 modelAndView.addObject("test", true);
             } else {
 
                 boolean flag = false;
                 modelAndView.addObject("userEntity1", userEntity1);
                 List<SheduleEntity> sheduleEntities = servise.getListShedule();
+                List<SheduleEntity> sheduleEntityList = new ArrayList<SheduleEntity>();
                 for(SheduleEntity sheduleEntity: sheduleEntities){
-                    UserEntity userEntity2= sheduleEntity.getUserByCodeUserId();
                     if (sheduleEntity.getUserByCodeUserId().getId()== userEntity1.getId()){
-                        modelAndView.setViewName("welcome");
-                        modelAndView.addObject("flag", false);
+                       sheduleEntityList.add(sheduleEntity);
                         flag = true;
                     }
                 }
                 if(!flag) {
                     modelAndView.setViewName("welcomeDown");
-                    modelAndView.addObject("flag", true);
+                    modelAndView.addObject("test", true);
+                }
+                else{
+                    modelAndView.setViewName("welcome");
+                    modelAndView.addObject("schedule", new SheduleEntity());
+                    modelAndView.addObject("shedules",sheduleEntityList);
+                    List<DaysweekEntity> daysweekEntities = servise.getListDay();
+                    modelAndView.addObject("dayWeek",daysweekEntities);
+                    if(userEntity1.getValid().equals(new String("false"))){
+                        modelAndView.addObject("test", true);}
+                    else modelAndView.addObject("test",false);
                 }
             }
+
        } else if(registration != null)
         {
             modelAndView.setViewName("registration");
@@ -127,9 +137,85 @@ public class ControllerMain {
     public ModelAndView downloadSch(@ModelAttribute("userEntity1") UserEntity userEntity1) throws IOException {
                     downloadSchedule(userEntity1);
                     ModelAndView modelAndView = new ModelAndView();
-                    modelAndView.setViewName("welcome");
+        boolean flag = false;
+        modelAndView.addObject("userEntity1", userEntity1);
+        List<SheduleEntity> sheduleEntities = servise.getListShedule();
+        List<SheduleEntity> sheduleEntityList = new ArrayList<SheduleEntity>();
+        for(SheduleEntity sheduleEntity: sheduleEntities){
+            if (sheduleEntity.getUserByCodeUserId().getId()== userEntity1.getId()){
+                sheduleEntityList.add(sheduleEntity);
+            }
+        }
+            modelAndView.setViewName("welcome");
+            modelAndView.addObject("schedule", new SheduleEntity());
+            modelAndView.addObject("shedules", sheduleEntityList);
+            List<DaysweekEntity> daysweekEntities = servise.getListDay();
+            modelAndView.addObject("dayWeek",daysweekEntities);
+            if(userEntity1.getValid().equals(new String("false"))){
+                modelAndView.addObject("test", true);}
+            else modelAndView.addObject("test",false);
+        return modelAndView;
+    }
 
-                  return modelAndView;
+    @RequestMapping("delete/{idSchedule}")
+    public ModelAndView deleteShedule(@ModelAttribute("userEntity1") UserEntity userEntity1,@PathVariable("idSchedule") Integer id, Model model){
+        servise.deleteShedule(id);
+        boolean flag = false;
+        ModelAndView modelAndView= new ModelAndView();
+        modelAndView.addObject("userEntity1", userEntity1);
+        List<SheduleEntity> sheduleEntities = servise.getListShedule();
+        List<SheduleEntity> sheduleEntityList = new ArrayList<SheduleEntity>();
+        for(SheduleEntity sheduleEntity: sheduleEntities){
+            if (sheduleEntity.getUserByCodeUserId().getId()== userEntity1.getId()){
+                sheduleEntityList.add(sheduleEntity);
+                flag = true;
+            }
+        }
+        if(!flag) {
+            modelAndView.setViewName("welcomeDown");
+            modelAndView.addObject("test", true);
+        }
+        else{
+            modelAndView.setViewName("welcome");
+            modelAndView.addObject("schedule", new SheduleEntity());
+            modelAndView.addObject("shedules", sheduleEntityList);
+            List<DaysweekEntity> daysweekEntities = servise.getListDay();
+            modelAndView.addObject("dayWeek",daysweekEntities);
+            if(userEntity1.getValid().equals(new String("false"))){
+                modelAndView.addObject("test", true);}
+            else modelAndView.addObject("test",false);
+        }
+        return modelAndView;
+    }
+
+    @RequestMapping("updateSchedule")
+    public ModelAndView updateSchdule(@ModelAttribute("userEntity1") UserEntity userEntity1, Model model) throws IOException {
+        List<SheduleEntity> sheduleEntities = servise.getListShedule();
+        for(SheduleEntity sheduleEntity: sheduleEntities){
+            if (sheduleEntity.getUserByCodeUserId().getId()== userEntity1.getId()){
+                servise.deleteShedule(sheduleEntity.getId());
+            }
+        }
+        downloadSchedule(userEntity1);
+        boolean flag = false;
+        sheduleEntities = servise.getListShedule();
+        List<SheduleEntity> sheduleEntityList = new ArrayList<SheduleEntity>();
+        for(SheduleEntity sheduleEntity: sheduleEntities){
+            if (sheduleEntity.getUserByCodeUserId().getId()== userEntity1.getId()){
+                sheduleEntityList.add(sheduleEntity);
+                flag = true;
+            }
+        }
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("welcome");
+        modelAndView.addObject("schedule", new SheduleEntity());
+        modelAndView.addObject("shedules",sheduleEntityList);
+        List<DaysweekEntity> daysweekEntities = servise.getListDay();
+        modelAndView.addObject("dayWeek",daysweekEntities);
+        if(userEntity1.getValid().equals(new String("false"))){
+            modelAndView.addObject("test", true);}
+        else modelAndView.addObject("test",false);
+        return modelAndView;
     }
 
 
@@ -153,10 +239,13 @@ public class ControllerMain {
                 ObjectMapper mapper = new ObjectMapper();
                 Example example = mapper.readValue(jp, Example.class);
 
+                userEntity.setValid("true");
+                servise.updateUser(userEntity);
+
                 //ПОЛЬЗОВАТЕЛЬ
                 SheduleEntity sheduleEntity = new SheduleEntity();
                 sheduleEntity.setUserByCodeUserId(userEntity);
-                sheduleEntity.setValide("true");
+
 
                 //ГРУППА
                 GroupsEntity groupsEntity = new GroupsEntity();
@@ -306,7 +395,7 @@ public class ControllerMain {
                     TeacherEntity teacherEntity = new TeacherEntity();
                     if(schedule_.getEmployee().size()!=0){
                     teacherEntity.setName(schedule_.getEmployee().get(0).getFirstName());
-                    teacherEntity.setSurname(schedule_.getEmployee().get(0).getFirstName());
+                    teacherEntity.setSurname(schedule_.getEmployee().get(0).getLastName());
                     teacherEntity.setPatronymic(schedule_.getEmployee().get(0).getMiddleName());
 
                     List<TeacherEntity> teacherEntities = servise.getListTeacher();
@@ -341,19 +430,19 @@ public class ControllerMain {
                             List<TeacherEntity> teacherEntities = servise.getListTeacher();
                             for(int t=0;t<teacherEntities.size();t++){
                                 TeacherEntity teacherEntity1 = teacherEntities.get(t);
-                                if(teacherEntity1.getSurname().equals(new String("NULL"))){
+                                if(teacherEntity1.getSurname().equals(new String(""))){
                                     teacherEntity.setId(teacherEntity1.getId());
                                     flag= true;
                                 }}
                                 if(flag == false){
                                     TeacherEntity teacherEntity2 = new TeacherEntity();
-                                    teacherEntity2.setName("NULL");
-                                    teacherEntity2.setSurname("NULL");
-                                    teacherEntity2.setPatronymic("NULL");
+                                    teacherEntity2.setName("");
+                                    teacherEntity2.setSurname("");
+                                    teacherEntity2.setPatronymic("");
                                     servise.addTeacher(teacherEntity2);
                                     teacherEntities = servise.getListTeacher();
                                     for(TeacherEntity teacherEntity3: teacherEntities){
-                                        if (teacherEntity3.getSurname().equals(new String("NULL"))){
+                                        if (teacherEntity3.getSurname().equals(new String(""))){
                                             teacherEntity.setId(teacherEntity3.getId());
                                         }
                                     }

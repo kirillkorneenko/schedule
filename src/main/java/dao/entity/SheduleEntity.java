@@ -6,7 +6,6 @@ import javax.persistence.*;
 @Table(name = "shedule", schema = "schedule", catalog = "")
 public class SheduleEntity {
     private int id;
-    private String valide;
     private String weekNumber;
     private DaysweekEntity daysweekByCodDayWeek;
     private CallsEntity callsByLessonNumber;
@@ -20,9 +19,12 @@ public class SheduleEntity {
         super();
     }
 
-    public SheduleEntity(int id, String valide, String weekNumber, DaysweekEntity daysweekByCodDayWeek, CallsEntity callsByLessonNumber, LecturehallEntity lecturehallByCodeAudience, GroupsEntity groupsByCodeGroup, UserEntity userByCodeUserId, SubjectEntity subjectByCodeDiscipline, TeacherEntity teacherByCodeTeacher) {
+    public SheduleEntity(int id) {
         this.id = id;
-        this.valide = valide;
+    }
+
+    public SheduleEntity(int id, String weekNumber, DaysweekEntity daysweekByCodDayWeek, CallsEntity callsByLessonNumber, LecturehallEntity lecturehallByCodeAudience, GroupsEntity groupsByCodeGroup, UserEntity userByCodeUserId, SubjectEntity subjectByCodeDiscipline, TeacherEntity teacherByCodeTeacher) {
+        this.id = id;
         this.weekNumber = weekNumber;
         this.daysweekByCodDayWeek = daysweekByCodDayWeek;
         this.callsByLessonNumber = callsByLessonNumber;
@@ -44,16 +46,6 @@ public class SheduleEntity {
     }
 
     @Basic
-    @Column(name = "valide", nullable = false, length = 50)
-    public String getValide() {
-        return valide;
-    }
-
-    public void setValide(String valide) {
-        this.valide = valide;
-    }
-
-    @Basic
     @Column(name = "weekNumber", nullable = true, length = 50)
     public String getWeekNumber() {
         return weekNumber;
@@ -71,7 +63,7 @@ public class SheduleEntity {
         SheduleEntity that = (SheduleEntity) o;
 
         if (id != that.id) return false;
-        if (valide != null ? !valide.equals(that.valide) : that.valide != null) return false;
+
         if (weekNumber != null ? !weekNumber.equals(that.weekNumber) : that.weekNumber != null) return false;
 
         return true;
@@ -80,12 +72,11 @@ public class SheduleEntity {
     @Override
     public int hashCode() {
         int result = id;
-        result = 31 * result + (valide != null ? valide.hashCode() : 0);
         result = 31 * result + (weekNumber != null ? weekNumber.hashCode() : 0);
         return result;
     }
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "codDayWeek", referencedColumnName = "id", nullable = false)
     public DaysweekEntity getDaysweekByCodDayWeek() {
         return daysweekByCodDayWeek;
@@ -95,7 +86,7 @@ public class SheduleEntity {
         this.daysweekByCodDayWeek = daysweekByCodDayWeek;
     }
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "lessonNumber", referencedColumnName = "id", nullable = false)
     public CallsEntity getCallsByLessonNumber() {
         return callsByLessonNumber;
@@ -105,7 +96,7 @@ public class SheduleEntity {
         this.callsByLessonNumber = callsByLessonNumber;
     }
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "codeAudience", referencedColumnName = "id", nullable = false)
     public LecturehallEntity getLecturehallByCodeAudience() {
         return lecturehallByCodeAudience;
@@ -115,7 +106,7 @@ public class SheduleEntity {
         this.lecturehallByCodeAudience = lecturehallByCodeAudience;
     }
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "codeGroup", referencedColumnName = "id", nullable = false)
     public GroupsEntity getGroupsByCodeGroup() {
         return groupsByCodeGroup;
@@ -125,7 +116,7 @@ public class SheduleEntity {
         this.groupsByCodeGroup = groupsByCodeGroup;
     }
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "userId", referencedColumnName = "id", nullable = false)
     public UserEntity getUserByCodeUserId() {
         return userByCodeUserId;
@@ -135,7 +126,7 @@ public class SheduleEntity {
         this.userByCodeUserId = userByCodeUserId;
     }
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "codeDiscipline", referencedColumnName = "id", nullable = false)
     public SubjectEntity getSubjectByCodeDiscipline() {
         return subjectByCodeDiscipline;
@@ -145,7 +136,7 @@ public class SheduleEntity {
         this.subjectByCodeDiscipline = subjectByCodeDiscipline;
     }
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "codeTeacher", referencedColumnName = "id", nullable = false)
     public TeacherEntity getTeacherByCodeTeacher() {
         return teacherByCodeTeacher;
@@ -159,7 +150,6 @@ public class SheduleEntity {
     public String toString() {
         return "SheduleEntity{" +
                 "id=" + id +
-                ", valide='" + valide + '\'' +
                 ", weekNumber='" + weekNumber + '\'' +
                 ", daysweekByCodDayWeek=" + daysweekByCodDayWeek +
                 ", callsByLessonNumber=" + callsByLessonNumber +

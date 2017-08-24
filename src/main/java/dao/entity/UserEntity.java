@@ -12,12 +12,17 @@ public class UserEntity {
     private String name;
     private String surname;
     private String status;
+    private  String valid;
 
     public UserEntity() {
         super();
     }
 
-    public UserEntity(int id, String login, String password, int groupNumber, String name, String surname, String status) {
+    public UserEntity(int id) {
+        this.id = id;
+    }
+
+    public UserEntity(int id, String login, String password, int groupNumber, String name, String surname, String status, String valid) {
         this.id = id;
         this.login = login;
         this.password = password;
@@ -25,6 +30,7 @@ public class UserEntity {
         this.name = name;
         this.surname = surname;
         this.status = status;
+        this.valid = valid;
     }
 
     @Id
@@ -97,6 +103,16 @@ public class UserEntity {
         this.status = status;
     }
 
+    @Basic
+    @Column(name = "valid", nullable = false, length = 50)
+    public String getValid() {
+        return valid;
+    }
+
+    public void setValid(String valid) {
+        this.valid = valid;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -111,6 +127,7 @@ public class UserEntity {
         if (name != null ? !name.equals(that.name) : that.name != null) return false;
         if (surname != null ? !surname.equals(that.surname) : that.surname != null) return false;
         if (status != null ? !status.equals(that.status) : that.status != null) return false;
+        if (valid != null ? !valid.equals(that.valid) : that.valid != null) return false;
 
         return true;
     }
@@ -124,6 +141,7 @@ public class UserEntity {
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (surname != null ? surname.hashCode() : 0);
         result = 31 * result + (status != null ? status.hashCode() : 0);
+        result = 31 * result + (valid != null ? valid.hashCode() : 0);
         return result;
     }
 
@@ -137,6 +155,7 @@ public class UserEntity {
                 ", name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
                 ", status='" + status + '\'' +
+                ", valid='" + valid+ '\''+
                 '}';
     }
 }

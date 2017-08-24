@@ -9,10 +9,12 @@ public class SubjectEntity {
     private String nameSubject;
     private String type;
 
-    public SubjectEntity() {
-        super();
+    public SubjectEntity() { super(); }
+    public SubjectEntity(int id) {
+        this.id = id;
     }
 
+    
     public SubjectEntity(int id, String nameSubject, String type) {
         this.id = id;
         this.nameSubject = nameSubject;

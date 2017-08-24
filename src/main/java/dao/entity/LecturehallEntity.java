@@ -12,6 +12,10 @@ public class LecturehallEntity {
         super();
     }
 
+    public LecturehallEntity(int id) {
+        this.id = id;
+    }
+
     public LecturehallEntity(int id, String housing) {
         this.id = id;
         this.housing = housing;
